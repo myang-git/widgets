@@ -29,7 +29,7 @@
 	function getLocation() {
 	  if(navigator.geolocation) {
 	  	navigator.geolocation.getCurrentPosition(onLocation);
-	  	navigator.geolocation.watchPosition(onLocation, onLocationError, {enableHighAccuracy: true, timeout: 10000, maximumAge: 60000};)
+	  	navigator.geolocation.watchPosition(onLocation, onLocationError, {enableHighAccuracy: true, timeout: 10000, maximumAge: 60000});
 	  }
 	  else {
 	  	x.innerHTML = "Geolocation is not supported by this browser.";
