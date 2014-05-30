@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>LocateMe</title>
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css" />
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+	<script>
+	
+	function onLocation(location) {
+		$("#latlng").html("" + location.coords.latitude.toFixed(6) + "," + location.coords.longitude.toFixed(6));
+		if(location.coords.altitude!=null) {
+			$("#altitude").html("" + location.coords.altitude.toFixed(0) + "m");
+		}
+		else {
+			$("#altitude").html("--");
+		}
+  }
+  
+  function onLocationError(error) {
+		$("#latlng").html("無法定位");
+		$("#altitude").html("無法定位");
+  }
+  
+	function getLocation() {
+	  if(navigator.geolocation) {
+	  	navigator.geolocation.getCurrentPosition(onLocation);
+	  	navigator.geolocation.watchPosition(onLocation, onLocationError, {enableHighAccuracy: true, timeout: 10000, maximumAge: 60000};)
+	  }
+	  else {
+	  	x.innerHTML = "Geolocation is not supported by this browser.";
+	  }
+	}
+
+	jQuery.fn.center = function () {
+		this.css("position","absolute");
+		this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2.0) + $(window).scrollTop() * 0) + "px");
+    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2.0) + $(window).scrollLeft() * 0) + "px");
+    return this;
+	}
+	
+	jQuery.fn.selectText = function(){
+		var doc = document;
+		var element = this[0];
+		console.log(this, element);
+		if (doc.body.createTextRange) {
+			var range = document.body.createTextRange();
+			range.moveToElementText(element);
+			range.select();
+		} 
+		else if (window.getSelection) {
+			var selection = window.getSelection();        
+			var range = document.createRange();
+			range.selectNodeContents(element);
+			selection.removeAllRanges();
+			selection.addRange(range);
+		}
+	};
+  
+	function init(event, ui) {
+		$("#grid").center();
+		getLocation();
+	  $("#divLatLng").on("click", function(event, ui) {
+	  	$("#latlng").selectText();
+	  });
+	}
+  
+  $(document).on("pageshow", init);
+	
+	</script>
+	
+</head>
+
+<body>
+
+<div id="mainpage" data-role="page">
+
+	<div role="main" class="ui-content">
+		<div id="grid" class="ui-grid-a" style="width: 90%;">
+			<div class="ui-block-a" style="width: 30%"><div class="ui-bar ui-bar-a"><p style="text-align:center;">座標</p></div></div>
+			<div class="ui-block-b" style="width: 70%"><div id="divLatLng" class="ui-bar ui-bar-a"><p id="latlng" style="text-align:center;">(定位中...)</p></div></div>
+			<div class="ui-block-a" style="width: 30%"><div class="ui-bar ui-bar-a"><p style="text-align:center;">高度</p></div></div>
+			<div class="ui-block-b" style="width: 70%"><div class="ui-bar ui-bar-a"><p id="altitude" style="text-align:center;">(定位中...)</p></div></div>
+		</div>
+	</div>
+
+</div>
+
+</body>
+</html>
