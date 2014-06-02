@@ -1,0 +1,9 @@
+CACHE MANIFEST
+# v1.0 20140602
+locateme.html
+http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css
+http://code.jquery.com/jquery-1.9.1.min.js
+http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js
+
+NETWORK:
+locateme.html
