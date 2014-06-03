@@ -11,8 +11,25 @@
 	<script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
 	<script>
 	
+  function decToDeg(dec) {
+	  var v = dec;
+	  h = v | 0;
+	  v-=h;
+	  m = (v * 60) | 0;
+	  v = v * 60 - m;
+	  s = Math.round(v * 60) * 10) / 10.0;
+	  return {h: h, m: m, s: s}
+	}
+	
+	function degToString(deg) {
+  	return "" + latDeg.h + "°" + latDeg.m + "'" + latDeg.s + '"';
+	}
+		
 	function onLocation(location) {
-		$("#latlng").html("" + location.coords.latitude.toFixed(6) + "," + location.coords.longitude.toFixed(6));
+		$("#latlngDec").html("" + location.coords.latitude.toFixed(6) + "," + location.coords.longitude.toFixed(6));
+		var latDeg = decToDeg(location.coords.latitude);
+		var lngDeg = decToDeg(location.coords.longitude);
+		$("#latlngDeg").html(degToString(latDeg) + "," + degToString(lngDeg));
 		if(location.coords.altitude!=null) {
 			$("#altitude").html("" + location.coords.altitude.toFixed(0) + "m");
 		}
@@ -22,17 +39,21 @@
   }
   
   function onLocationError(error) {
-		$("#latlng").html("無法定位");
+		$("#latlngDec").html("無法定位");
+		$("#latlngDeg").html("無法定位");
 		$("#altitude").html("無法定位");
   }
   
 	function getLocation() {
 	  if(navigator.geolocation) {
+  		$("#latlngDec").html("定位中...");
+  		$("#latlngDeg").html("定位中...");
+	  	$("#altitude").html("定位中...");
 	  	navigator.geolocation.getCurrentPosition(onLocation);
 	  	navigator.geolocation.watchPosition(onLocation, onLocationError, {enableHighAccuracy: true, timeout: 10000, maximumAge: 0});
 	  }
 	  else {
-	  	x.innerHTML = "Geolocation is not supported by this browser.";
+	  	alert("瀏覽器沒有定位功能");
 	  }
 	}
 
@@ -65,7 +86,7 @@
 		$("#grid").center();
 		getLocation();
 	  $("#divLatLng").on("click", function(event, ui) {
-	  	$("#latlng").selectText();
+	  	$("#latlngDec").selectText();
 	  });
 	}
   
@@ -82,9 +103,11 @@
 	<div role="main" class="ui-content">
 		<div id="grid" class="ui-grid-a" style="width: 90%; border-radius: 8px;">
 			<div class="ui-block-a" style="width: 30%"><div class="ui-bar ui-bar-a"><p style="text-align:center;">座標</p></div></div>
-			<div class="ui-block-b" style="width: 70%"><div id="divLatLng" class="ui-bar ui-bar-a"><p id="latlng" style="text-align:center;">(定位中...)</p></div></div>
+			<div class="ui-block-b" style="width: 70%"><div id="divLatLng" class="ui-bar ui-bar-a"><p id="latlngDec" style="text-align:center;">定位中...</p></div></div>
+			<div class="ui-block-a" style="width: 30%"><div class="ui-bar ui-bar-a"><p style="text-align:center;">座標</p></div></div>
+			<div class="ui-block-b" style="width: 70%"><div id="divLatLng" class="ui-bar ui-bar-a"><p id="latlngDeg" style="text-align:center;">定位中...</p></div></div>
 			<div class="ui-block-a" style="width: 30%"><div class="ui-bar ui-bar-a"><p style="text-align:center;">高度</p></div></div>
-			<div class="ui-block-b" style="width: 70%"><div class="ui-bar ui-bar-a"><p id="altitude" style="text-align:center;">(定位中...)</p></div></div>
+			<div class="ui-block-b" style="width: 70%"><div class="ui-bar ui-bar-a"><p id="altitude" style="text-align:center;">定位中...</p></div></div>
 		</div>
 	</div>
 
