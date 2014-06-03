@@ -22,14 +22,16 @@
 	}
 	
 	function degToString(deg) {
-  	return "" + deg.h + "°" + deg.m + "'" + deg.s + '"';
+  	return "" + Math.abs(deg.h) + "°" + Math.abs(deg.m) + "'" + Math.abs(deg.s) + '"';
 	}
 		
 	function onLocation(location) {
 		$("#latlngDec").html("" + location.coords.latitude.toFixed(6) + "," + location.coords.longitude.toFixed(6));
 		var latDeg = decToDeg(location.coords.latitude);
+		var latDir = latDeg.h>=0 ? "N" : "S";
 		var lngDeg = decToDeg(location.coords.longitude);
-		$("#latlngDeg").html(degToString(latDeg) + "," + degToString(lngDeg));
+		var lngDir = lngDeg.h>=0 ? "E" : "W"; 
+		$("#latlngDeg").html(degToString(latDeg) + latDir + "," + degToString(lngDeg) + lngDir);
 		if(location.coords.altitude!=null) {
 			$("#altitude").html("" + location.coords.altitude.toFixed(0) + "m");
 		}
